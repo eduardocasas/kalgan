@@ -28,11 +28,11 @@ tera = { version = "1.15.0", optional = true }
 tokio = { version ="1.14.0", features = ["full"], optional = true }
 urlencoding = "2.1.0"
 uuid = { version = "0.8", features = ["v4"], optional = true  }
-kalgan_router = { git = "https://github.com/eduardocasas/kalgan-router" }
-kalgan_i18n = { git = "https://github.com/eduardocasas/kalgan-i18n", optional = true }
-kalgan_config = { git = "https://github.com/eduardocasas/kalgan-config" }
-kalgan_cache = { git = "https://github.com/eduardocasas/kalgan-cache", optional = true }
-kalgan_string = { git = "https://github.com/eduardocasas/kalgan-string" }
+kalgan_router = { version = "0.9.0" }
+kalgan_i18n = { version = "0.9.0", optional = true }
+kalgan_config = { version = "0.9.0" }
+kalgan_cache = { version = "0.9.0", optional = true }
+kalgan_string = { version = "0.9.0" }
 
 [features]
 default = []
