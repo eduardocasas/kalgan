@@ -1,0 +1,7 @@
+routes:
+  - hello_world:
+      path: /hello-world
+      controller: hello_world
+  - user:
+      path: /user/{name}/{surname}
+      controller: user_controller/index

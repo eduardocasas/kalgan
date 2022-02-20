@@ -1,0 +1,44 @@
+#[macro_export]
+macro_rules! render {
+    ($view_path: expr) => {
+        kalgan::http::response::render($view_path, kalgan::template::Context::new())
+    };
+    ($view_path: expr, $view_parameters: expr) => {
+        kalgan::http::response::render($view_path, $view_parameters)
+    };
+}
+#[macro_export]
+macro_rules! hashmap {
+    ($( $key: expr => $val: expr ),*) => {{
+         let mut map = ::std::collections::HashMap::new();
+         $( map.insert($key, $val); )*
+         map
+    }}
+}
+#[macro_export]
+macro_rules! context {
+    ($( $key: expr => $val: expr ),*) => {{
+        use kalgan::template::Sugar;
+        let mut context = kalgan::template::Context::new();
+        $( context.insert($key, $val); )*
+        context
+    }}
+}
+#[macro_export]
+macro_rules! url {
+    ($route_name: expr) => {
+        kalgan::service::url::generate($route_name, ::std::collections::HashMap::new())
+    };
+    ($route_name: expr, $route_parameters: expr) => {
+        kalgan::service::url::generate($route_name, $route_parameters)
+    };
+}
+#[macro_export]
+macro_rules! trans {
+    ($language_id: expr, $message_id: expr) => {
+        kalgan::service::i18n::trans($language_id, $message_id, ::std::collections::HashMap::new())
+    };
+    ($language_id: expr, $message_id: expr, $message_parameters: expr) => {
+        kalgan::service::i18n::trans($language_id, $message_id, $message_parameters)
+    };
+}

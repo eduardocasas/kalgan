@@ -1,0 +1,7 @@
+server:
+  address: 127.0.0.1
+  port: 7878
+router:
+  path: routes.yaml
+tera:
+  path: template

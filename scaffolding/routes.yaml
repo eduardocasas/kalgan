@@ -1,0 +1,4 @@
+routes:
+  - hello_world:
+      path: /
+      controller: hello_world

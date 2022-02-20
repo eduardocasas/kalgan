@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Error {{ error_code }} | {{ error_message }} | Kalgan Framework</title>
+    <meta name="description" content="Error {{ error_code }} | {{ error_message }}.">
+    <meta name="author" content="Eduardo Casas">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+            * {
+                border:none;
+                box-sizing: border-box;
+                color: $color-text;
+                font-family: Roboto, sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            a {
+                color: #436cac;
+            }
+            a:link, a:visited {
+                text-decoration: none;
+                outline: 0;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            :focus {
+                outline: 0;
+            }
+            ::-moz-focus-inner {
+                border: 0;
+            }
+            /*** Texts ***/
+            #main_title {
+                font-weight: normal;
+            }
+            .subtitle {
+                font-weight: normal;
+                margin-top: 20px;
+            }
+            /*** Body ***/
+            html {
+                height: 100%;
+            }
+            body {
+                margin: 0 auto;
+                min-height: 100%;
+                min-width: 300px;
+                position: relative;
+            }
+            #wrapper_body {
+                margin: 0 auto;
+                max-width: 1060px;
+                min-height: 100%;
+                overflow: hidden;
+                padding-top: 100px;
+                position: relative;
+            }
+            /*** Header ***/
+            #header {
+                background-color: #efefef;
+                border-bottom: 1px solid #efefef;
+                height: 60px;
+                left: 0;
+                min-width: 300px;
+                overflow: hidden;
+                position: fixed;
+                top: 0;
+                width: 100%;
+                z-index: 1;
+            }
+            #header h1 {
+                display: inline-block;
+                font-size: 1.4em;
+                font-weight: normal;
+                margin: 13px 10px 0 20px;
+            }
+            /*** Footer ***/
+            #footer {
+                background-color: #efefef;
+                border-top: 1px solid #efefef;
+                bottom: 0;
+                clear: both;
+                display: block;
+                height: 90px;
+                min-width: 300px;
+                overflow: hidden;
+                padding-top: 20px;
+                position: absolute;
+                text-align: center;
+                width: 100%;
+            }
+            #footer ul {
+                list-style-type: none;
+                margin-top: 10px
+            }
+            #footer li {
+                display: inline-block;
+                margin: 0 10px;
+            }
+            /*** Table ***/
+            table {
+                border-collapse:collapse;
+                margin: 20px 0 100px;
+            }
+            tr:nth-child(even) {
+                background: #efefef;
+            }
+            th {
+                text-align: right;
+                vertical-align: top;
+            }
+            td, th {
+                border: 1px solid #eee;
+                padding: 8px;
+            }
+            #cookies_cell {
+                padding: 0;
+            }
+            #cookies_cell table {
+                margin: 0;
+            }
+            #cookies_cell th {
+                text-align: left;
+            }
+            #cookies_cell th, #cookies_cell td {
+                background-color: #fff;
+                font-size: 0.8em;
+                padding: 3px 8px;
+            }
+        </style>
+</head>
+<body>
+<header id="header">
+    <h1>Error {{ error_code }} - {{ error_message }} :(</h1>
+</header>
+<div id="wrapper_body">
+    <h1 id="main_title">{{ message }}</h1>
+    <h2 class="subtitle">Request sent from browser:</h2>
+    <table>
+        <tr>
+            <th>uri</th>
+            <td>{{ request.uri }}</td>
+        </tr>
+        <tr>
+            <th>method</th>
+            <td>{{ request.method }}</td>
+        </tr>
+        <tr>
+            <th>protocol</th>
+            <td>{{ request.protocol }}</td>
+        </tr>
+        <tr>
+            <th>cookies</th>
+            <td {% if request.cookies|length != 0 %}id="cookies_cell"{% endif %}>
+                {% if request.cookies|length == 0 %}
+                No cookies have been sent from browser.
+                {% else %}
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    {% for name, value in request.cookies %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>host</th>
+            <td>{{ request.host }}</td>
+        </tr>
+        <tr>
+            <th>user_agent</th>
+            <td>{{ request.user_agent }}</td>
+        </tr>
+        <tr>
+            <th>middleware</th>
+            <td>
+                {% if request.middleware|length == 0 %}
+                No parameters have been sent from Middleware.
+                {% else %}
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    {% for name, value in request.middleware %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>input</th>
+            <td>
+                {% if request.input|length == 0 %}
+                No input parameters have been sent from browser.
+                {% else %}
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    {% for name, value in request.input %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>referer</th>
+            <td>{{ request.referer }}</td>
+        </tr>
+        <tr>
+            <th>raw</th>
+            <td>{{ request.raw }}</td>
+        </tr>
+    </table>
+</div>
+<footer id="footer">
+    <p>These links might help you with Kalgan</p>
+    <ul>
+        <li><a href="" target="_blank">Official site</a></li>
+        <li><a href="" target="_blank">Github</a></li>
+        <li><a href="" target="_blank">crates.io</a></li>
+        <li><a href="" target="_blank">Docs.rs</a></li>
+    </ul>
+</footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+environment:
+  is_prod: false
+  refresh_config_timeout: 3
+i18n:
+  language:
+    default: en
+  path: tests/mock/i18n
+router:
+  path: tests/mock/routes.yaml
+tera:
+  path: tests/mock/template
+cookie:
+  mock:
+    name: mock_id
+    max_age: 2000
+    http_only: true
+mock:
+  string_value: Hello World
+  boolean_value: true
+  number_value: 1984
+  float_value: 1984.101
+  vec_value:
+    - Foo
+    - Bar

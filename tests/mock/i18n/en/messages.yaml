@@ -1,0 +1,3 @@
+mock:
+    hello: Hello World
+    user: My name is {name} {surname}

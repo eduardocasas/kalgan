@@ -1,0 +1,43 @@
+[package]
+name = "kalgan"
+version = "0.9.0"
+edition = "2018"
+description = "A web framework for Rust programing language."
+documentation = "https://kalgan.eduardocasas.com/doc"
+homepage = "https://kalgan.eduardocasas.com"
+repository = "https://github.com/eduardocasas/kalgan"
+license = "MIT OR Apache-2.0"
+keywords = ["web", "framework", "http"]
+categories = ["web-programming", "web-programming::http-server"]
+build = "build.rs"
+
+[dependencies]
+argon2 = { version = "0.3.2", optional = true }
+buf_redux = "0.8.4"
+chrono = "0.4.19"
+lazy_static = "1.4.0"
+lettre = { version = "0.10.0-rc.4", features = ["smtp-transport", "tokio1-rustls-tls", "tokio1-native-tls"], optional = true }
+log = { version = "0.4" }
+rand = { version = "0.8.4", optional = true }
+rand_core = { version = "0.6", features = ["std"], optional = true }
+regex = "1.5.4"
+serde = { version = "1.0.130", features = ["derive"] }
+serde_yaml = "0.8.21"
+sqlx = { version = "0.5.10", features = [ "runtime-tokio-rustls", "postgres", "mysql", "sqlite", "offline" ], optional = true }
+tera = { version = "1.15.0", optional = true }
+tokio = { version ="1.14.0", features = ["full"], optional = true }
+urlencoding = "2.1.0"
+uuid = { version = "0.8", features = ["v4"], optional = true  }
+kalgan_router = { git = "https://github.com/eduardocasas/kalgan-router/" }
+kalgan_i18n = { git = "https://github.com/eduardocasas/kalgan-i18n.git", optional = true }
+kalgan_config = { git = "https://github.com/eduardocasas/kalgan-config.git" }
+kalgan_cache = { git = "https://github.com/eduardocasas/kalgan-cache.git", optional = true }
+kalgan_string = { git = "https://github.com/eduardocasas/kalgan-string.git" }
+
+[features]
+default = []
+test = []
+mailer = ["lettre", "tokio"]
+session = ["kalgan_cache", "uuid"]
+services = ["rand", "rand_core", "argon2"]
+full = ["kalgan_i18n", "mailer", "services", "session", "sqlx", "tera"]

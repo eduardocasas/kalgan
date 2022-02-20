@@ -1,0 +1,11 @@
+use kalgan::http::{ request::Request, response::Response };
+
+pub(crate) fn hello_world(_request: &Request) -> Response {
+    render!("hello_world.html")
+}
+pub(crate) fn resolver(request: &Request, controller: &str) -> Result<Response, String> {
+    match controller {
+        "hello_world" => Ok(hello_world(request)),
+        _ => Err(format!("Controller {} not found in resolver.", &controller))
+    }
+}
