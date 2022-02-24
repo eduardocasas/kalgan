@@ -44,7 +44,7 @@ A web framework for Rust programing language.
 For further information please visit:
 
 * [Official Kalgan Site](https://kalgan.eduardocasas.com)
-* [API Documentation on docs.rs](https://docs.rs/crate/kalgan/latest)
+* [API Documentation on docs.rs](https://docs.rs/kalgan)
 
 
 ## License

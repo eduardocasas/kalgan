@@ -199,13 +199,8 @@ impl<'a> Request<'a> {
     /// Parses and returns the collection of cookies of the request.
     fn parse_cookies(request: &str) -> HashMap<String, String> {
         let mut cookies: HashMap<String, String> = HashMap::new();
-        let cookies_collection = match regex::Regex::new(r#"Cookie:.*"#).unwrap().find(request) {
-            Some(x) => x
-                .as_str()
-                .to_string()
-                .replace("Cookie:", "")
-                .replace(" ", "")
-                .to_string(),
+        let cookies_collection = match regex::Regex::new(r#"(?i)Cookie:.*"#).unwrap().find(request) {
+            Some(x) => regex::Regex::new(r"(?i)Cookie:").unwrap().replace_all(x.as_str(), "").to_string().replace(" ", ""),
             None => "".to_string(),
         };
         let collection: Vec<&str> = cookies_collection.split(";").collect();
@@ -224,9 +219,9 @@ impl<'a> Request<'a> {
     }
     /// Parses and returns the host field of the request.
     fn parse_host(request: &str) -> String {
-        match regex::Regex::new(r#"Host:.*"#).unwrap().find(request) {
+        match regex::Regex::new(r#"(?i)Host:.*"#).unwrap().find(request) {
             Some(x) => {
-                let mut string = x.as_str().replace("Host:", "").replace(" ", "").to_string();
+                let mut string = regex::Regex::new(r"(?i)Host:").unwrap().replace_all(x.as_str(), "").to_string().replace(" ", "");
                 let len = string.trim_end_matches(&['\r', '\n'][..]).len();
                 string.truncate(len);
                 Request::parse_url_encoding(&string)
@@ -236,13 +231,9 @@ impl<'a> Request<'a> {
     }
     /// Parses and returns the user agent of the request.
     fn parse_user_agent(request: &str) -> String {
-        match regex::Regex::new(r#"User-Agent:.*"#).unwrap().find(request) {
+        match regex::Regex::new(r#"(?i)User-Agent:.*"#).unwrap().find(request) {
             Some(x) => {
-                let mut string = x
-                    .as_str()
-                    .replace("User-Agent:", "")
-                    .replace(" ", "")
-                    .to_string();
+                let mut string = regex::Regex::new(r"(?i)User-Agent:").unwrap().replace_all(x.as_str(), "").to_string().replace(" ", "");
                 let len = string.trim_end_matches(&['\r', '\n'][..]).len();
                 string.truncate(len);
                 string
@@ -253,21 +244,19 @@ impl<'a> Request<'a> {
     /// Parses and returns the input data collection of the request.
     fn parse_input(request: &str) -> HashMap<String, String> {
         let mut input: HashMap<String, String> = HashMap::new();
-        match regex::Regex::new(r#"Content-Type: multipart/form-data;"#)
+        match regex::Regex::new(r#"(?i)Content-Type: multipart/form-data;"#)
             .unwrap()
             .find(request)
         {
             Some(_x) => {
-                for mat in regex::Regex::new(r#"Content-Disposition: form-data; name=.*"#)
+                for mat in regex::Regex::new(r#"(?i)Content-Disposition: form-data; name=.*"#)
                     .unwrap()
                     .find_iter(request)
                 {
-                    let mut key = mat
-                        .as_str()
-                        .replace("Content-Disposition: form-data; name=", "")
+                    let mut key = regex::Regex::new(r"(?i)Content-Disposition: form-data; name=").unwrap()
+                        .replace_all(mat.as_str(), "").to_string()
                         .replace(" ", "")
-                        .replace("\"", "")
-                        .to_string();
+                        .replace("\"", "");
                     let len = key.trim_end_matches(&['\r', '\n'][..]).len();
                     key.truncate(len);
                     if !key.contains("filename=") {
@@ -303,14 +292,9 @@ impl<'a> Request<'a> {
     }
     /// Parses and returns the referer field of the request.
     fn parse_referer(request: &str) -> String {
-        match regex::Regex::new(r#"Referer:.*"#).unwrap().find(request) {
+        match regex::Regex::new(r#"(?i)Referer:.*"#).unwrap().find(request) {
             Some(x) => {
-                let mut string = x
-                    .as_str()
-                    .to_string()
-                    .replace("Referer:", "")
-                    .replace(" ", "")
-                    .to_string();
+                let mut string = regex::Regex::new(r"(?i)Referer:").unwrap().replace_all(x.as_str(), "").to_string().replace(" ", "");
                 let len = string.trim_end_matches(&['\r', '\n'][..]).len();
                 string.truncate(len);
                 string
@@ -331,7 +315,7 @@ impl<'a> Request<'a> {
     /// Parses and returns the collection of files attached to the request.
     fn parse_files<'b>(request: &str, buffer: &'b [u8]) -> HashMap<String, File<'b>> {
         let mut files: HashMap<String, File> = HashMap::new();
-        match regex::Regex::new(r#"Content-Type: multipart/form-data;.*?\r\n"#)
+        match regex::Regex::new(r#"(?i)Content-Type: multipart/form-data;.*?\r\n"#)
             .unwrap()
             .find(request)
         {
@@ -344,13 +328,13 @@ impl<'a> Request<'a> {
                 let mut prev = 0;
                 for mat in regex::Regex::new(
                     format!(
-                        r#"Content-Disposition: form-data; name=(?s:.*?){}"#,
+                        r#"(?i)Content-Disposition: form-data; name=(?s:.*?){}"#,
                         boundary
                     )
-                    .as_str(),
+                        .as_str(),
                 )
-                .unwrap()
-                .find_iter(request)
+                    .unwrap()
+                    .find_iter(request)
                 {
                     let request_clone = request[mat.start()..mat.end()].to_string().clone();
                     let lines: Vec<&str> = request_clone
@@ -360,12 +344,10 @@ impl<'a> Request<'a> {
                     let first_line = lines[0].to_string();
                     if first_line.contains("filename=") && !first_line.contains("filename=\"\"") {
                         let params: Vec<&str> = first_line.split("filename=").collect();
-                        let mut content_type = lines[1]
-                            .to_string()
-                            .replace("Content-Type:", "")
+                        let mut content_type = regex::Regex::new(r"(?i)Content-Type:").unwrap()
+                            .replace_all(lines[1], "").to_string()
                             .replace(" ", "")
-                            .replace("\"", "")
-                            .to_string();
+                            .replace("\"", "");
                         let len = content_type.trim_end_matches(&['\r', '\n'][..]).len();
                         content_type.truncate(len);
                         let x1 = request_clone.find(&lines[3].to_string()).unwrap();
@@ -402,14 +384,13 @@ impl<'a> Request<'a> {
                         files.insert(
                             kalgan_string::strip(
                                 kalgan_string::strip_right(
-                                    params[0]
-                                        .replace("Content-Disposition: form-data; name=", "")
-                                        .trim(),
+                                    regex::Regex::new(r"(?i)Content-Disposition: form-data; name=")
+                                        .unwrap().replace_all(params[0], "").trim(),
                                     ';',
                                 ),
                                 '"',
                             )
-                            .to_string(),
+                                .to_string(),
                             File {
                                 filename: params[1].replace(" ", "").replace("\"", ""),
                                 content_type: content_type,

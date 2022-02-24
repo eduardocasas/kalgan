@@ -135,10 +135,10 @@ impl Response {
     ///
     /// let response: Response = Response::new().set_content("<h1>Hello World</h1>");
     ///
-    /// # assert_eq!(response.mock_get_content(), "\r\n\r\n<h1>Hello World</h1>")
+    /// # assert_eq!(response.mock_get_content(), "<h1>Hello World</h1>")
     /// ```
     pub fn set_content(mut self, content: &str) -> Self {
-        self.content = format!("\r\n\r\n{}", content);
+        self.content = format!("{}", content);
         self
     }
     /// Sets the content length of the response and returns the instance.
@@ -164,7 +164,7 @@ impl Response {
     /// ```
     pub fn create(&self) -> Vec<u8> {
         format!(
-            "{}{}{}{}{}",
+            "{}{}{}{}\r\n\r\n{}",
             self.status,
             self.location,
             self.create_cookies(),
@@ -191,7 +191,7 @@ impl Response {
 /// # use kalgan::http::response::Mock;
 ///
 /// let response: Response = response::json("{\"name\": \"John\", \"surname\": \"Doe\"}");
-/// # assert_eq!(response.mock_get_content(), "\r\n\r\n{\"name\": \"John\", \"surname\": \"Doe\"}".to_string())
+/// # assert_eq!(response.mock_get_content(), "{\"name\": \"John\", \"surname\": \"Doe\"}".to_string())
 /// ```
 pub fn json(contents: &str) -> Response {
     Response::new()
@@ -212,7 +212,7 @@ pub fn json(contents: &str) -> Response {
 ///  <name>John</name>\
 ///  <surname>Doe</author>\
 /// </user>");
-/// # assert_eq!(response.mock_get_content(), "\r\n\r\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+/// # assert_eq!(response.mock_get_content(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
 /// # <user>\
 /// #   <name>John</name>\
 /// #   <surname>Doe</author>\

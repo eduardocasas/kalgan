@@ -68,7 +68,7 @@ fn get_response(
         #[cfg(feature = "kalgan_i18n")]
         crate::set_messages();
     }
-    debug!("{:?}", &request);
+    debug!("{:#?}", &request);
     if asset::is_static_file(&request) {
         asset::serve_static(&request)
     } else {

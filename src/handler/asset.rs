@@ -38,7 +38,6 @@ pub fn serve_static(request: &Request) -> Vec<u8> {
                 .set_content_type(get_content_type(&uri))
                 .create();
             let mut bytes = result;
-            bytes.append(&mut "\n\n".as_bytes().to_vec());
             bytes.append(&mut contents);
             bytes
         }
